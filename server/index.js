@@ -27,7 +27,8 @@ app.post("/create", (req, res) => {
       if (err) {
         res.status(500).send(err);
       } else {
-        res.status(200).send("successfully inserted");
+        result.message = "Successfully added";
+        res.status(200).send(result);
       }
     }
   );
@@ -43,6 +44,35 @@ app.get("/employees", (req, res) => [
   }),
 ]);
 
+app.put("/update", (req, res) => {
+  const id = req.body.id;
+  const wage = req.body.wage;
+  db.query(
+    "update employees set wage = ? where id = ?",
+    [wage, id],
+    (err, result) => {
+      if (err) {
+        res.send(500).send(err);
+      } else {
+        res.status(200).send("Successfully updated");
+      }
+    }
+  );
+});
+
+app.delete("/delete/:id", (req, res) => {
+  const id = req.params.id;
+  console.log(id);
+
+  db.query("delete from employees where id = ?", id, (err, result) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.status(200).send("Successfully deleted");
+    }
+  });
+});
+
 app.listen(3001, () => {
-  console.log("server is running on port " + 3001);
+  console.log("server is listening and running on port " + 3001);
 });
